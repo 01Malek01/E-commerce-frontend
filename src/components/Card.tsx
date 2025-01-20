@@ -1,18 +1,13 @@
 import React from "react";
+import { Product } from "../types";
+import useAddToCart from "../hooks/api/useAddToCart";
+import { Link } from "react-router-dom";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 
 // Define the props interface
-interface ProductCardProps {
-  name: string;
-  description: string;
-  price: number;
-  category: string;
-  brand: string;
-  images: string[]; // Array of image URLs
-  stock: number;
-  rating: number; // Rating out of 5
-}
 
-const ProductCard: React.FC<ProductCardProps> = ({
+const ProductCard: React.FC<Product> = ({
+  _id,
   name,
   description,
   price,
@@ -20,39 +15,74 @@ const ProductCard: React.FC<ProductCardProps> = ({
   brand,
   images,
   stock,
-  rating,
+  ratings,
 }) => {
+  const { addProductToCart, isError, isPending, isSuccess } = useAddToCart();
+
+  const handleAddToCart = async () => {
+    await addProductToCart(_id);
+  };
   return (
-    <div className="max-w-sm bg-white rounded-lg shadow-md p-4 mx-auto mt-10">
+    <div className="product-card w-96 h-auto bg-white shadow-lg rounded-lg p-4 flex flex-col justify-between">
       {/* Product Image */}
-      <div className="product-image mb-4">
-        <img
-          src={images[0]}
-          alt={name}
-          className="w-full h-64 object-cover rounded-lg"
-        />
-      </div>
+      <Link to={`/product/${_id}`}>
+        <div className="product-card__image mb-4">
+          <img
+            src={images[0]}
+            alt={name}
+            className="product-card__image--main w-full h-64 object-cover rounded-lg"
+          />
+        </div>
+      </Link>
 
       {/* Product Details */}
-      <div className="product-details">
-        <h2 className="text-lg font-bold mb-2">{name}</h2>
-        <p className="text-gray-600 mb-4">{description}</p>
-        <p className="text-lg font-bold mb-2">
+      <div className="product-card__details">
+        <h2 className="product-card__title text-lg font-bold mb-2">{name}</h2>
+        <p className="product-card__description text-gray-600 mb-4">
+          {description}
+        </p>
+        <p className="product-card__price text-lg font-bold mb-2">
           <strong>Price:</strong> ${price.toFixed(2)}
         </p>
-        <p className="text-gray-600 mb-2">
+        <p className="product-card__category text-gray-600 mb-2">
           <strong>Category:</strong> {category}
         </p>
-        <p className="text-gray-600 mb-2">
+        <p className="product-card__brand text-gray-600 mb-2">
           <strong>Brand:</strong> {brand}
         </p>
-        <p className={`text-${stock > 0 ? "green" : "red"}-600 mb-2`}>
+        <p
+          className={`product-card__stock text-${
+            stock > 0 ? "green" : "red"
+          }-600 mb-2`}
+        >
           <strong>Stock:</strong>{" "}
           {stock > 0 ? `${stock} available` : "Out of stock"}
         </p>
-        <p className="text-gray-600 mb-2">
-          <strong>Rating:</strong> {rating}/5
+        <p className="product-card__rating text-gray-600 mb-2">
+          <strong>Rating:</strong> {ratings}/5
         </p>
+      </div>
+      <div className="product-card__actions flex flex-row justify-start gap-4">
+        {/* Add to Cart Button */}
+        <Link to={`/product/${_id}`}>
+          <button className="  product-card__view text-black outline outline-2 hover:bg-black hover:text-white transition-all duration-150 px-4 py-2 rounded-lg">
+            View{" "}
+          </button>
+        </Link>
+        <button
+          onClick={handleAddToCart}
+          className="product-card__add-to-cart text-black outline outline-2 hover:bg-black hover:text-white transition-all duration-150 px-4 py-2 rounded-lg"
+        >
+          {isPending ? (
+            "Adding to Cart..."
+          ) : isSuccess ? (
+            <IoMdCheckmarkCircleOutline className="text-green-600" />
+          ) : isError ? (
+            "Error adding to Cart"
+          ) : (
+            "Add to Cart"
+          )}{" "}
+        </button>
       </div>
     </div>
   );
