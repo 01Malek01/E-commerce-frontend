@@ -10,8 +10,8 @@ SuperTokens.init({
   appInfo: {
     // learn more about this on https://supertokens.com/docs/references/app-info
     appName: "E-Commerce",
-    apiDomain: "http://localhost:8000",
-    websiteDomain: "http://localhost:5173",
+    apiDomain: import.meta.env.VITE_BACKEND_URL,
+    websiteDomain: import.meta.env.VITE_FRONTEND_URL,
     apiBasePath: "/auth",
     websiteBasePath: "/auth",
   },
