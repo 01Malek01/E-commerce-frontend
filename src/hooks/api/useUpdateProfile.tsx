@@ -11,7 +11,11 @@ const useUpdateProfile = () => {
     country: string;
   }) => {
     try {
-      await axios.post(`${backendUrl}/user/profile`, data);
+      await axios.post(`${backendUrl}/user/profile`, data,
+        {
+          withCredentials: true,
+        }
+      );
     } catch (error) {
       console.log(error);
     }

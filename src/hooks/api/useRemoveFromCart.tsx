@@ -7,7 +7,10 @@ const useRemoveFromCart = () => {
   const removeFromCart = async (productId: string) => {
     try {
       const response = await axios.delete(
-        `${backendUrl}/products/${productId}/remove-from-cart`
+        `${backendUrl}/products/${productId}/remove-from-cart`,
+        {
+          withCredentials: true,
+        }
       );
       return response.data;
     } catch (error) {

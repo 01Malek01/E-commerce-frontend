@@ -4,7 +4,11 @@ const backendUrl = import.meta.env.VITE_BACKEND_URL;
 const useGetOrders = () => {
   const getOrders = async () => {
     try {
-      const response = await axios.get(`${backendUrl}/orders`);
+      const response = await axios.get(`${backendUrl}/orders`,
+        {
+          withCredentials: true,
+        }
+      );
       return response.data;
     } catch (error) {
       console.log(error);

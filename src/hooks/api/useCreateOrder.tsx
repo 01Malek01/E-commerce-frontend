@@ -9,6 +9,9 @@ const useCreateOrder = () => {
     try {
       const response = await axios.post(`${backendUrl}/orders`, {
         details,
+      },
+      {
+        withCredentials: true,
       });
       return response.data;
     } catch (error) {

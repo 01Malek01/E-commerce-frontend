@@ -5,7 +5,11 @@ const useGetProfile = () => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const getProfile = async () => {
     try {
-      const res = await axios.get(`${backendUrl}/user/profile`);
+      const res = await axios.get(`${backendUrl}/user/profile`,
+        {
+          withCredentials: true,
+        }
+      );
       return res.data;
     } catch (error) {
       console.log(error);

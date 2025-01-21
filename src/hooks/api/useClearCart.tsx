@@ -6,7 +6,11 @@ const useClearCart = () => {
 
   const clearCart = async () => {
     try {
-      const response = await axios.delete(`${backendUrl}/products/clear-cart`);
+      const response = await axios.delete(`${backendUrl}/products/clear-cart`,
+        {
+          withCredentials: true,
+        }
+      );
       return response.data;
     } catch (error) {
       console.error(error);

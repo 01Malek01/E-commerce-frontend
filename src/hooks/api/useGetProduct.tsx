@@ -5,7 +5,11 @@ const useGetPRoduct = (id: string | undefined) => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const getProduct = async () => {
     try {
-      const res = await axios.get(`${backendUrl}/products/${id}`);
+      const res = await axios.get(`${backendUrl}/products/${id}`,
+        {
+          withCredentials: true,
+        }
+      );
       return res.data;
     } catch (error) {
       console.log(error);

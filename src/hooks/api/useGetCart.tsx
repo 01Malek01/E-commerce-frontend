@@ -4,7 +4,11 @@ const backendUrl = import.meta.env.VITE_BACKEND_URL;
 const useGetCart = () => {
   const getCart = async () => {
     try {
-      const response = await axios.get(`${backendUrl}/products/cart`);
+      const response = await axios.get(`${backendUrl}/products/cart`,
+        {
+          withCredentials: true,
+        }
+      );
       return response.data;
     } catch (error) {
       console.log(error);

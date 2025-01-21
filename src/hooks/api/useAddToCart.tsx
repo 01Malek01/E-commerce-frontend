@@ -10,6 +10,9 @@ const useAddToCart = () => {
         `${backendUrl}/products/${productId}/add-to-cart`,
         {
           productId,
+        },
+        {
+          withCredentials: true,
         }
       );
       return response.data;
