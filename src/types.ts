@@ -34,3 +34,10 @@ export interface Order {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface OrderDetails {
+  email: string;
+  items_IDs: string;
+  totalPrice: number;
+  shippingPrice: number;
+}

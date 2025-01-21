@@ -72,12 +72,10 @@ export default function Product() {
           <div className="ratings mb-4">
             <span className="text-yellow-500">
               {Array(Math.floor(product.ratings))
-                .fill()
                 .map((_, index) => (
                   <span key={index}>⭐️</span>
                 ))}
               {Array(5 - Math.floor(product.ratings))
-                .fill()
                 .map((_, index) => (
                   <span key={index}>☆</span>
                 ))}

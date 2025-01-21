@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import useGetCart from "../hooks/api/useGetCart";
 import { Product } from "../types";
@@ -6,24 +7,26 @@ import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import useCreateOrder from "../hooks/api/useCreateOrder";
 import useClearCart from "../hooks/api/useClearCart";
 import useGetProfile from "../hooks/api/useGetProfile";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { CreateOrderData, OnApproveData } from "@paypal/paypal-js";
 
 function Cart() {
   const { profile } = useGetProfile();
-  const [{ options, isPending }, dispatch] = usePayPalScriptReducer();
+  const [{  isPending }] = usePayPalScriptReducer();
   const [cartItems, setCartItems] = useState<Product[]>([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const { cart, isError, isLoading } = useGetCart();
   const { createOrderAsync } = useCreateOrder();
   const { clearCartAsync } = useClearCart();
-  const { removeProductFromCart, isLoading: isLoadingRemove } =
+  const { removeProductFromCart, isPending: isLoadingRemove } =
     useRemoveFromCart();
+    const navigate = useNavigate();
   // Calculate total price whenever cart items change
   useEffect(() => {
     if (cart) {
       setCartItems(cart);
       const total = cart.reduce(
-        (sum, item) => sum + item.price * (item.quantity || 1),
+        (sum: number, item: Product) => sum + item.price,
         0
       );
       setTotalPrice(total);
@@ -31,7 +34,7 @@ function Cart() {
   }, [cart]);
 
   //paypal
-  const onCreateOrder = (data, actions) => {
+  const onCreateOrder = (_data: CreateOrderData, actions: { order: any; }) => {
     return actions.order.create({
       purchase_units: [
         {
@@ -59,10 +62,12 @@ function Cart() {
     });
   };
 
-  const onApproveOrder = (data, actions) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onApproveOrder = (_data: OnApproveData, actions:any) => {
     return actions.order
       .capture()
-      .then((details) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .then((details: any) => {
         const name = details.payer.name.given_name;
         const orderDetails = {
           email: details.payer.email_address,
@@ -74,6 +79,7 @@ function Cart() {
         alert(`Transaction completed by ${name}`);
         //create order on backend
         createOrderAsync(orderDetails);
+        navigate('/profile')
       })
       .then(() => {
         clearCartAsync();
@@ -81,7 +87,7 @@ function Cart() {
         setTotalPrice(0);
         // navigate("/orders");
       })
-      .catch((error) => {
+      .catch((error: any) => {
         console.error(error);
       });
   };
